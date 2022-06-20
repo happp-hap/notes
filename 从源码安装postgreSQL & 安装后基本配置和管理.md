@@ -1,7 +1,7 @@
 
 
 
-# 从源码安装postgreSQL & 安装后基本配置和管理
+# Solaris从源码安装postgreSQL & 安装后基本配置和管理
 
 1. 安装gcc编译工具
 	
