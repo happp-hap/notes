@@ -6,68 +6,73 @@
 IPS（Image Packaging System）软件包信息库
 
 1. 下载CBE
-	从Oracle Solaris官网。
-	
+  从Oracle Solaris官网。
+
 2. ftp下载到的文件到目标Solaris系统上。
-	压缩包都点开看看，会发现有一些README。
-	
+  压缩包都点开看看，会发现有一些README。
+
 3. 解压CBE中的V1019846-01.zip文件。
-	文件中的内容是：
-	install-repo.ksh                                      生产ISO的脚本
-	README-zipped-repo.txt                      怎么使用的说明
-	sol-11_4_42_111_0-repo_digest.txt     MD5验证集
-	
-	这些文件和一堆zip压缩包在同一个目录下。
-	给install-repo.ksh脚本x执行权限，运行命令：$ sudo ./install-repo.ksh -d /tank/repos/dev -I -v -c 
+  文件中的内容是：
 
-	输出：
+  install-repo.ksh                                      生产ISO的脚本
 
-	`Using V1019847-01 files for sol-11_4_42_111_0-repo download.
+  README-zipped-repo.txt                      怎么使用的说明
 
-	Comparing digests of downloaded files...done. Digests match.
+  sol-11_4_42_111_0-repo_digest.txt     MD5验证集
 
-	Uncompressing V1019847-01_1of7.zip...done.
-	Uncompressing V1019847-01_2of7.zip...done.
-	Uncompressing V1019847-01_3of7.zip...done.
-	Uncompressing V1019847-01_4of7.zip...done.
-	Uncompressing V1019847-01_5of7.zip...done.
-	Uncompressing V1019847-01_6of7.zip...done.
-	Uncompressing V1019847-01_7of7.zip...done.
-	Repository can be found in /tank/repos/dev.
-	Initiating repository verification.
-	Building ISO image...wdone.
-	ISO image can be found at:
-	/export/home/hap/solariscbe/sol-11_4_42_111_0-repo.iso
-	Instructions for using the ISO image can be found at:
-	/tank/repos/dev/README-repo-iso.txt`
+  
 
-	
-	最终生成一个15G的大文件。
-	
+  这些文件和一堆zip压缩包在同一个目录下。
+  给install-repo.ksh脚本x执行权限，运行命令：$ sudo ./install-repo.ksh -d /tank/repos/dev -I -v -c 
+
+  输出：
+
+  `Using V1019847-01 files for sol-11_4_42_111_0-repo download.
+
+  Comparing digests of downloaded files...done. Digests match.
+
+  Uncompressing V1019847-01_1of7.zip...done.
+  Uncompressing V1019847-01_2of7.zip...done.
+  Uncompressing V1019847-01_3of7.zip...done.
+  Uncompressing V1019847-01_4of7.zip...done.
+  Uncompressing V1019847-01_5of7.zip...done.
+  Uncompressing V1019847-01_6of7.zip...done.
+  Uncompressing V1019847-01_7of7.zip...done.
+  Repository can be found in /tank/repos/dev.
+  Initiating repository verification.
+  Building ISO image...wdone.
+  ISO image can be found at:
+  /export/home/hap/solariscbe/sol-11_4_42_111_0-repo.iso
+  Instructions for using the ISO image can be found at:
+  /tank/repos/dev/README-repo-iso.txt`
+
+
+  最终生成一个15G的大文件。
+
 4. 从sol-11_4_42_111_0-repo.iso文件，创建永久性本地软件包信息库。
-	
-	创建一个zfs文件系统：
 
-		`sudo zfs create rpool/export/repoSolaris11`
-		
-		`sudo zfs set atime=off rpool/export/repoSolaris11(atime关闭，主要是为了获取高性能)`
+  创建一个zfs文件系统：
 
-	挂载iso到/reposource：
-		`sudo mount -F hsfs /export/home/hap/solariscbe/sol-11_4_42_111_0-repo.iso /reposource`
+  	`sudo zfs create rpool/export/repoSolaris11`
+  	
+  	`sudo zfs set atime=off rpool/export/repoSolaris11(atime关闭，主要是为了获取高性能)`
 
-	将挂载好的iso导入zfs文件系统（将 SRU 包导入现有的 Oracle Solaris 11.4 信息库）：
-		`sudo rsync -aP /reposource /export/repoSolaris11`
+  挂载iso到/reposource：
+  	`sudo mount -F hsfs /export/home/hap/solariscbe/sol-11_4_42_111_0-repo.iso /reposource`
 
-	重建存储库的搜索索引：
-		`sudo pkgrepo rebuild -s /export/repoSolaris11/reposource/repo/
-		输出：
-		Initiating repository rebuild.
-		`
-	发布：
-        `pkg unset-publisher solaris
+  将挂载好的iso导入zfs文件系统（将 SRU 包导入现有的 Oracle Solaris 11.4 信息库）：
+  	`sudo rsync -aP /reposource /export/repoSolaris11`
 
-        pkg set-publisher -g file:///export/repoSolaris11/reposource/repo/ solaris    (直接发布IPS软件包)
-        sudo pkg set-publisher --disable ha-cluster (把没有用的发布者屏蔽)`
+  重建存储库的搜索索引：
+  	`sudo pkgrepo rebuild -s /export/repoSolaris11/reposource/repo/
+  	输出：
+  	Initiating repository rebuild.
+  	`
+  发布：
+       `pkg unset-publisher solaris
+
+       pkg set-publisher -g file:///export/repoSolaris11/reposource/repo/ solaris    (直接发布IPS软件包)
+       sudo pkg set-publisher --disable ha-cluster (把没有用的发布者屏蔽)`
 
 5. 安装个gdb试试
 
@@ -81,6 +86,7 @@ IPS（Image Packaging System）软件包信息库
 
 
     $ sudo pkg install gdb
+    
     Password: 
                Packages to install:  1
                 Services to change:  1
@@ -99,6 +105,7 @@ IPS（Image Packaging System）软件包信息库
     Updating package cache                           2/2 
     
     $ gdb
+    
     GNU gdb (GDB) 10.2
     Copyright (C) 2021 Free Software Foundation, Inc.
     License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
