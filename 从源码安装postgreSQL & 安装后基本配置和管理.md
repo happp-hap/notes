@@ -168,19 +168,19 @@
 
 9. 查看运行的postgres进程
 
-	ps us
-	ps: illegal option -- s
-	usage: ps [ -aceglnrSuUvwx ] [ -t term ] [ --scale[=item1,item2,...] ] [ num ]
-	postgres@solaris:~$ ps ux
-	USER       PID %CPU %MEM   SZ  RSS TT       S    START  TIME COMMAND
-	postgres  1314  0.1  0.1 10908 4176 pts/1    O 14:27:38  0:00 ps ux
-	postgres  1267  0.0  0.1 13312 5976 pts/1    R 14:17:15  0:00 bash
-	postgres  1217  0.0  0.1 165808 6428 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-	postgres  1218  0.0  0.1 165800 3416 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-	postgres  1219  0.0  0.1 165804 6168 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-	postgres  1220  0.0  0.1 166324 5328 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-	postgres  1221  0.0  0.1 20724 2108 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-	postgres  1222  0.0  0.1 166196 2868 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
+		ps us
+		ps: illegal option -- s
+		usage: ps [ -aceglnrSuUvwx ] [ -t term ] [ --scale[=item1,item2,...] ] [ num ]
+		postgres@solaris:~$ ps ux
+		USER       PID %CPU %MEM   SZ  RSS TT       S    START  TIME COMMAND
+		postgres  1314  0.1  0.1 10908 4176 pts/1    O 14:27:38  0:00 ps ux
+		postgres  1267  0.0  0.1 13312 5976 pts/1    R 14:17:15  0:00 bash
+		postgres  1217  0.0  0.1 165808 6428 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
+		postgres  1218  0.0  0.1 165800 3416 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
+		postgres  1219  0.0  0.1 165804 6168 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
+		postgres  1220  0.0  0.1 166324 5328 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
+		postgres  1221  0.0  0.1 20724 2108 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
+		postgres  1222  0.0  0.1 166196 2868 ?        S 14:10:41  0:00 /usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
 
 
 
