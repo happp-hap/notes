@@ -106,7 +106,7 @@
 
 5. 启动pg_ctl
 
-		postgres@solaris:/usr/local/pgsql/data$ /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l ./log/logfile start
+		postgres@solaris:/usr/local/pgsql/data$ /usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/data/log/logfile start
 		waiting for server to start.... done
 		server started
 
