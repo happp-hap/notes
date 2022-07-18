@@ -66,7 +66,7 @@
 		MANPATH=/usr/local/pgsql/share/man:$MANPATH
 		export MANPATH
 
-	postgres 用户密码提示 1和0
+	postgres 用户设置密码，创建目录
 
 		mkdir /usr/local/pgsql/data/
 
