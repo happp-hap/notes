@@ -78,7 +78,8 @@ make(GNU make版本3.80或以上)，make install:
 
 ### 使用
 
-```testdb=# select * from company;
+```
+testdb=# select * from company;
  id | name | age |                      address                       | salary 
 ----+------+-----+----------------------------------------------------+--------
   1 | Paul |  32 | California                                         |  20000
