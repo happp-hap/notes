@@ -129,7 +129,7 @@ testdb=# EXPLAIN SELECT * FROM tbl where id < 8000;
 
 ```
 
-比如说，我们恰巧又有一个 tbl2 表，有10000行：
+比如说，我们恰巧又有一个 tbl2 表，有100000行：
 
 ```
 testdb=# CREATE TABLE tbl2 (id int PRIMARY KEY, data int);
