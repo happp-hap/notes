@@ -129,7 +129,7 @@ testdb=# EXPLAIN SELECT * FROM tbl where id < 8000;
 
 ```
 
-比如说，我们恰巧又有一个 tbl2 表，有100000行：
+比如说，我们恰巧又有一个 tbl2 表，有 100000 行：
 
 ```
 testdb=# CREATE TABLE tbl2 (id int PRIMARY KEY, data int);
@@ -258,7 +258,7 @@ testdb=# EXPLAIN SELECT * FROM tbl2 where id < 50619;
    Filter: (id < 50619)
 (2 rows)
 
--- 10000 行的表， where 子句 id < 50618 走索引，再大就直接走全表扫描，因为代价已经达到全表扫描的程度。
+-- 100000 行的表， where 子句 id < 50618 走索引，再大就直接走全表扫描，因为代价已经达到全表扫描的程度。
 
 ```
 
