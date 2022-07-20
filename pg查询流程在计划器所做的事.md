@@ -125,6 +125,8 @@ testdb=# EXPLAIN SELECT * FROM tbl where id < 8000;
    Filter: (id < 8000)
 (2 rows)
 
+-- 使用过滤器 id<8000 来确保数据库产生顺序扫描的行为。
+
 ```
 
 比如说，我们恰巧又有一个 tbl2 表，有10000行：
