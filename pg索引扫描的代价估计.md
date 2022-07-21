@@ -47,7 +47,6 @@ start_up_cost = {...} * cpu_operator_cost
 N_index_tuple     = 10000
 H_index           = 1
 cpu_operator_cost = 0.0025
-
 ```
 
 所以 `strat_up_cost = {ceil(log2(10000))+2*50}*0.0025 = 0.285`
@@ -70,7 +69,6 @@ table_cpu_cost = Selectivity * N_tuple * cpu_tuple_cost
 
 
 index_io_cost = ceil(Selectivity*N_index_page) * random_page_cost
-
 ```
 其中：
 ```
@@ -80,11 +78,13 @@ random_page_cost     = 4.0
 ```
 ```
 qual_op_cost         = 0.0025 (索引求值的代价)
-Selectivity: 0~1 的浮点数，代表查询指定的 where 子句在索引中搜索范围的比例。
+Selectivity: 选择率，0~1 的浮点数，代表查询指定的 where 子句在索引中搜索范围的比例。
 需要读取表元组的数量：Selectivity*N_tuple 
 需要读取索引元组的数量：Selectivity*N_index_page 
 
 ```
+
+[计算过程](./选择率.md)
 
 经过一系列繁琐的计算，可以得到`run_cost = 13.2`.
 
