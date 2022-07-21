@@ -111,7 +111,7 @@ Selectivity: 选择率，0~1 的浮点数，代表查询指定的 where 子句�
 需要读取索引元组的数量：Selectivity*N_index_page 
 ```
 
-[计算过程 - 选择率和 cost 计算](./选择率.md)
+[计算过程 - 选择率和 run_cost 计算](./选择率.md)
 
 
 经过一系列繁琐的计算，可以得到`run_cost = 13.2`.
