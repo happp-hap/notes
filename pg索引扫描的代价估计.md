@@ -109,7 +109,6 @@ qual_op_cost         = 0.0025 (索引求值的代价)
 Selectivity: 选择率，0~1 的浮点数，代表查询指定的 where 子句在索引中搜索范围的比例。
 需要读取表元组的数量：Selectivity*N_tuple 
 需要读取索引元组的数量：Selectivity*N_index_page 
-
 ```
 
 [计算过程 - 选择率和 cost 计算](./选择率.md)

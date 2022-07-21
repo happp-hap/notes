@@ -28,6 +28,8 @@ INSERT INTO tbl_corr (col, col_asc, col_desc, col_rand) values  ('Tuple_12', 12,
 
 -- 查询语句
 
+ANALYZE; -- 产生分析数据
+
 \d tbl_corr;
 
 select * from tbl_corr;
