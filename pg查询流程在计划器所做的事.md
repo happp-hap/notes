@@ -269,6 +269,7 @@ testdb=# EXPLAIN SELECT * FROM tbl2 where id < 50619;
 
 [前往 - pg 索引扫描的代价估计](./pg索引扫描的代价估计.md)
 
+
 ### 排序怎么估计代价？
 
 [前往 - pg 排序的代价估计](./pg排序的代价估计.md)
