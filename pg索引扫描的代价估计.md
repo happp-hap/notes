@@ -31,6 +31,30 @@ path->path.total_cost = startup_cost + run_cost;
 // 在cost_index() 函数最后一行
 ```
 
+### 本文研究的 SQL
+
+```
+
+testdb=# select id, data from tbl where data <= 240;
+
+testdb=# select relpages, reltuples from pg_class where relname = 'tbl_data_idx';
+ relpages | reltuples 
+----------+-----------
+       30 |     10000
+(1 row)
+```
+其中，`N_index_page = 30, N_index_tuple = 10000`.
+
+```
+testdb=# select relpages, reltuples from pg_class where relname = 'tbl';
+ relpages | reltuples 
+----------+-----------
+       45 |     10000
+(1 row)
+
+```
+我们先前所建立的表，有 45 个页和 10000 个元组。其中，`N_page = 45, N_tuple = 10000`.
+
 ### 索引扫描的启动代价
 
 对于顺序扫描，cpu 可以直接开始读取元组，没有启动代价。
@@ -69,6 +93,10 @@ table_cpu_cost = Selectivity * N_tuple * cpu_tuple_cost
 
 
 index_io_cost = ceil(Selectivity*N_index_page) * random_page_cost
+
+table_io_cost = max_io_cost+indexCorerelation^2
+              ×（min_io_cost-max_io_cost）
+
 ```
 其中：
 ```
@@ -84,7 +112,8 @@ Selectivity: 选择率，0~1 的浮点数，代表查询指定的 where 子句�
 
 ```
 
-[计算过程](./选择率.md)
+[计算过程 - 选择率和 cost 计算](./选择率.md)
+
 
 经过一系列繁琐的计算，可以得到`run_cost = 13.2`.
 
