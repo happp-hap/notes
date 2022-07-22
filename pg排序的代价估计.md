@@ -16,6 +16,10 @@ pg 排序操作有 `ORDER BY`、归并连接的预处理操作、其他函数等
 
 所以，pg 使用内排序还是外排序，取决于内存中能不能放下所有待排序的元组。
 
+## pg 负责计算排序总花费的函数是什么？
+
+`cost_sort()`
+
 ## 本文研究的 SQL 语句
 
 从表 `tbl` 中选取 `id, data` 列，要求 `data <= 240` ，并按 `id` 排序。
@@ -64,6 +68,10 @@ testdb=# EXPLAIN SELECT id, data FROM tbl WHERE data <=240 ORDER BY id;
 
 ```
 start_up_cost = C + comparision_cost * N_sort * log2(N_sort)
+
+// 源码：
+//    *startup_cost = comparison_cost * tuples * LOG2(tuples);
+//    startup_cost += input_cost; 
 ```
 
 其中 C 是上一次扫描的总代价。换句话说，排序之前，先要索引扫描所需元组。
@@ -104,6 +112,7 @@ start_up_cost = C + comparision_cost * N_sort * log2(N_sort)
 
 ```
 run_cost = cpu_operator_cost * N_sort = 0.0025 * 240 = 0.6
+// run_cost = cpu_operator_cost * tuples;
 ```
 
 运行代价为 `0.6`.
