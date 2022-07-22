@@ -12,7 +12,7 @@ pg 排序操作有 `ORDER BY`、归并连接的预处理操作、其他函数等
 ## 排序操作会使用什么排序算法？是内排序还是外排序？
 
 如果能在内存中放下所有元组，排序操作会选择快速排序。
-如果内存中放不下了，就会创建临时文件，使用文件归并排序算法。
+如果内存中放不下了，就会创建临时文件，使用文件归并排序。
 
 所以，pg 使用内排序还是外排序，取决于内存中能不能放下所有待排序的元组。
 
@@ -50,7 +50,7 @@ testdb=# EXPLAIN SELECT id, data FROM tbl WHERE data <=240 ORDER BY id;
 ```
 可以看到，排序操作的启动代价为 `22.97`，总代价为 `23.57`.
 
-这里 `EXPLAIN` 给出了查询的计划树，包含一个排序和一个索引扫描
+这里 `EXPLAIN` 给出了查询的计划树，包含一个排序和一个索引扫描，先索引扫描，后排序。
 
 `sort -> Index Scan`
 
@@ -68,7 +68,7 @@ start_up_cost = C + comparision_cost * N_sort * log2(N_sort)
 
 其中 C 是上一次扫描的总代价。换句话说，排序之前，先要索引扫描所需元组。
 
-上一次扫描如下面的 `EXPLAIN`，是一个索引扫描，可以看到有 `Index` 字样。索引扫描的总代价是 `13.49`，所以次数 C = `13.485`(3 位小数由[前文](./pg索引扫描的代价估计.md)精确计算得到).
+上一次扫描如下面的 `EXPLAIN`，是一个索引扫描，可以看到有 `Index` 字样。索引扫描的总代价是 `13.49`，所以上一次扫描的总代价 C = `13.485`(3 位小数由[前文](./pg索引扫描的代价估计.md)精确计算得到).
 
 
 ```
@@ -100,7 +100,7 @@ start_up_cost = C + comparision_cost * N_sort * log2(N_sort)
 
 ### 运行代价
 
-运行代价就是 cpu 在内存中读取排好序的元组的代价，也就是 cpu 顺序操作已排序元组：
+运行代价就是 cpu 在内存中读取排好序的元组的代价，也就是 cpu 顺序操作一遍已排序元组，就是 `cpu_operator_cost * N_sort` 即可：
 
 ```
 run_cost = cpu_operator_cost * N_sort = 0.0025 * 240 = 0.6
@@ -116,6 +116,20 @@ total_cost = start_up_cost + run_cost
            = 23.573
 ```
 
-总代价为 `23.573`.
+总代价为 `23.573`，和我们查到的基本一致。
+
+```
+testdb=# EXPLAIN SELECT id, data FROM tbl WHERE data <=240 ORDER BY id;
+                                   QUERY PLAN                                   
+ 
+--------------------------------------------------------------------------------
+-
+ Sort  (cost=22.97..23.57 rows=240 width=8)
+   Sort Key: id
+   ->  Index Scan using tbl_data_idx on tbl  (cost=0.29..13.49 rows=240 width=8)
+         Index Cond: (data <= 240)
+(4 rows)
+```
+
 
 [返回 - pg 查询在计划器所做的事 00182](./pg查询流程在计划器所做的事.md) 
