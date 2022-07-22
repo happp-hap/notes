@@ -50,6 +50,12 @@ testdb=# EXPLAIN SELECT id, data FROM tbl WHERE data <=240 ORDER BY id;
 ```
 可以看到，排序操作的启动代价为 `22.97`，总代价为 `23.57`.
 
+这里 `EXPLAIN` 给出了查询的计划树，包含一个排序和一个索引扫描
+
+`sort -> Index Scan`
+
+索引扫描的总代价为 `13.49`.
+
 ## 计算排序操作的启动代价、运行代价和总代价
 
 ### 启动代价
