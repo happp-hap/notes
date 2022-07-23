@@ -39,6 +39,7 @@ CUDA Toolkit (Pytorch)： CUDA不完整的工具安装包，其主要包含在�
 注：CUDA Toolkit 完整和不完整的区别：在安装了CUDA Toolkit (Pytorch)后，只要系统上存在与当前的 cudatoolkit 所兼容的 Nvidia 驱动，则已经编译好的 CUDA 相关的程序就可以直接运行，不需要重新进行编译过程。如需要为 Pytorch 框架添加 CUDA 相关的拓展时（Custom C++ and CUDA Extensions），需要对编写的 CUDA 相关的程序进行编译等操作，则需安装完整的 Nvidia 官方提供的 CUDA Toolkit。
 
 版权声明：本文为CSDN博主「健0000」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+
 原文链接：https://blog.csdn.net/qq_41094058/article/details/116207333
 
 ## nvcc 是什么
@@ -52,6 +53,7 @@ nvcc可以从CUDA Toolkit的/bin目录中获取,类似于gcc就是c语言的编�
 ## 建议从操作系统开始定制 pytorch 环境
 
 pytorch 官方网站   ：https://pytorch.org/
+
 从本地安装 pytorch ：https://pytorch.org/get-started/locally/
 
 为什么要从操作系统开始定制呢，因为 pytorch 在用来做机器学习训练的时候，需要 GPU 加速，来避免我们在训练时间上产生无法忍受的开销。
