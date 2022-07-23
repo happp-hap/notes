@@ -1,5 +1,5 @@
 
-[返回 - pg 查询在计划器所做的事 00182](./pg查询流程在计划器所做的事.md) 
+[返回 - pg 查询在计划器所做的事 00182](./pg_planner.md) 
 
 # pg索引扫描的代价估计
 
@@ -131,6 +131,6 @@ testdb=# EXPLAIN SELECT id,data FROM tbl WHERE data <= 240;
 
 ```
 
-[返回 - pg 查询在计划器所做的事 00182](./pg查询流程在计划器所做的事.md) 
+[返回 - pg 查询在计划器所做的事 00182](./pg_planner.md) 
 
 
