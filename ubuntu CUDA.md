@@ -1,5 +1,5 @@
 
-# ubuntu 安装 CUDA 环境
+# ubuntu安装本地pytorch
 
 ## 什么是 pytorch？
 
