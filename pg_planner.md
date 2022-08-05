@@ -275,7 +275,8 @@ testdb=# EXPLAIN SELECT * FROM tbl2 where id < 50619;
 [前往 - pg 排序的代价估计](./pg排序的代价估计.md)
 
 
-
+### 计划树
+[前往 - pg 计划树](./pg_plan_tree.md)
 
 [返回 - pg 查询流程梳理](./pg查询流程梳理.md)
 
