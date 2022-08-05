@@ -297,7 +297,7 @@ testdb=# SELECT * FROM tbl_1 WHERE id < 300 ORDER BY data;
 
 2. 在 RelOptInfo 结构的 baserestrictinfo 字段中，添加一条 WHERE 子句。
 
-WHERE子句id<300会经由 initsplan.c 中定义的 `distribute_restrictinfo_to_rels()` 函数，添加至列表变量 baserestrictinfo 中。另外由于目标表上没有相关索引，RelOptInfo 的 indexlist 字段为空。
+WHERE子句 `id<300` 会经由 initsplan.c 中定义的 `distribute_restrictinfo_to_rels()` 函数，添加至列表变量 baserestrictinfo 中。另外由于目标表上没有相关索引，RelOptInfo 的 indexlist 字段为空。
 
 3. 为了满足排序要求，planner.c中的 `standard_qp_callback()` 函数会在 PlannerInfo 的 sor_pathkeys 字段中添加一个 pathkey。
 
@@ -328,6 +328,13 @@ SortPath 结构包含两个 Path 结构：path 与 subpath；path 中存储了�
 这里已经获得了代价最小的访问路径，然后就可以基于此生成一颗计划树。
 
 ## 按照代价最小的路径，创建计划树
+
+源码位置（pg14.1）：
+
+Planner.c (src\backend\optimizer\plan)	238795  line:00419
+```
+	best_path = get_cheapest_fractional_path(final_rel, tuple_fraction);
+```
 
 计划器按照代价最小的路径生成一颗计划树。 
 
