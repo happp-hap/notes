@@ -274,7 +274,7 @@ typedef struct RelOptInfo
 
 3. 如有必要，估计LIMIT，ORDER BY和AGGREGATE操作的代价。
 
-为了更加清晰的理解计划器的执行过程，下面给出了两个具体的例子。
+为了更加清晰的理解计划器的执行过程，下面给出具体的例子。
 
 ### 例子
 研究一个简单单表查询，该查询同时包含 WHERE 和 ORDER BY 子句。
