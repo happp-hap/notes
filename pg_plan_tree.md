@@ -161,15 +161,15 @@ typedef struct PlannerInfo {
 
 1. 简化目标列表（target list），LIMIT子句等；
 
-例如，表达式2+2会被重写为4，这是由clauses.c中eval_const_expressions()函数负责的。
+例如，表达式2+2会被重写为4，这是由 clauses.c 中 eval_const_expressions() 函数负责的。
 
 2. 布尔表达式的规范化
 
 例如，NOT(NOT a)会被重写为a。
 
-3. 压平与/或表达式
+3. 压平与、或表达式
 
-SQL标准中的AND/OR是二元操作符；但在PostgreSQL内部它们是多元操作符。而计划器总是会假设所有的嵌套AND/OR都应当被压平。
+SQL标准中的AND/OR是二元操作符，但在PostgreSQL内部它们是多元操作符。而计划器总是会假设所有的嵌套AND/OR都应当被压平。
 
 压平：
 ![avatar](./img/fig-3-09.png)
@@ -183,7 +183,9 @@ SQL标准中的AND/OR是二元操作符；但在PostgreSQL内部它们是多元�
 
 1. 创建一个RelOptInfo数据结构，存储访问路径及其代价。
 
-RelOptInfo结构体是通过make_one_rel()函数创建的，并存储于PlannerInfo结构体的simple_rel_array字段中，如图3.10所示。在初始状态时RelOptInfo持有着baserestrictinfo变量，如果存在相应索引，还会持有indexlist变量。baserestrictinfo存储着查询的WHERE子句，而indexlist存储着目标表上相关的索引。
+RelOptInfo 结构体是通过 make_one_rel() 函数创建的，并存储在 PlannerInfo 结构体的 simple_rel_array 字段中。
+
+在初始状态时 RelOptInfo 持有着 baserestrictinfo 变量，如果存在相应索引，还会持有 indexlist 变量。baserestrictinfo 存储着查询的 WHERE 子句，而 indexlist 存储着目标表上相关的索引。
 
 ```
 typedef enum RelOptKind
@@ -261,22 +263,22 @@ typedef struct RelOptInfo
 } RelOptInfo;
 ```
 
-2. 估计所有可能访问路径的代价，并将访问路径添加至RelOptInfo结构中。
+2. 估计所有可能访问路径的代价，并将访问路径添加至 RelOptInfo 结构中。
 
 这一处理过程的细节如下：
 
-创建一条路径，估计该路径中顺序扫描的代价，并将其写入路径中。将该路径添加到RelOptInfo结构的pathlist变量中。
-如果目标表上存在相关的索引，则为每个索引创建相应的索引访问路径。估计所有索引扫描的代价，并将代价写入相应路径中。然后将索引访问路径添加到pathlist变量中。
-如果可以进行位图扫描，则创建一条位图扫描访问路径。估计所有的位图扫描的代价，并将代价写入到路径中。然后将位图扫描路径添加到pathlist变量中。
-从RelOptInfo的pathlist中，找出代价最小的访问路径。
+- 创建一条路径，估计该路径中顺序扫描的代价，并将其写入路径中。将该路径添加到RelOptInfo 结构的 pathlist 变量中。
+- 如果目标表上存在相关的索引，则为每个索引创建相应的索引访问路径。估计所有索引扫描的代价，并将代价写入相应路径中。然后将索引访问路径添加到 pathlist 变量中。
+- 如果可以进行位图扫描，则创建一条位图扫描访问路径。估计所有的位图扫描的代价，并将代价写入到路径中。然后将位图扫描路径添加到 pathlist 变量中。
+- 从 RelOptInfo 的 pathlist 中，找出代价最小的访问路径。
 
 3. 如有必要，估计LIMIT，ORDER BY和AGGREGATE操作的代价。
 
 为了更加清晰的理解计划器的执行过程，下面给出了两个具体的例子。
 
-3.3.2.1 例1
-首先来研究一个不带索引的简单单表查询；该查询同时包含WHERE和ORDER BY子句。
-
+### 例子
+研究一个简单单表查询，该查询同时包含 WHERE 和 ORDER BY 子句。
+```
 testdb=# \d tbl_1
      Table "public.tbl_1"
  Column |  Type   | Modifiers 
@@ -285,48 +287,45 @@ testdb=# \d tbl_1
  data   | integer | 
 
 testdb=# SELECT * FROM tbl_1 WHERE id < 300 ORDER BY data;
-图3.10和图3.11展示了本例中计划器的处理过程。
+```
+本例中计划器的处理过程：
+![avatar](./img/fig-3-10.png)
+![avatar](./img/fig-3-11.png)
 
-图3.10 如何得到例1中代价最小的路径
 
+1. 创建一个 RelOptInfo 结构，将其保存在 PlannerInfo 结构的 simple_rel_array 字段中。
 
+2. 在 RelOptInfo 结构的 baserestrictinfo 字段中，添加一条 WHERE 子句。
 
-创建一个RelOptInfo结构，将其保存在PlannerInfo结构的simple_rel_array字段中。
+WHERE子句id<300会经由 initsplan.c 中定义的 `distribute_restrictinfo_to_rels()` 函数，添加至列表变量 baserestrictinfo 中。另外由于目标表上没有相关索引，RelOptInfo 的 indexlist 字段为空。
 
-在RelOptInfo结构的baserestrictinfo字段中，添加一条WHERE子句。
+3. 为了满足排序要求，planner.c中的 `standard_qp_callback()` 函数会在 PlannerInfo 的 sor_pathkeys 字段中添加一个 pathkey。
 
-WHERE子句id<300会经由initsplan.c中定义的distribute_restrictinfo_to_rels()函数，添加至列表变量baserestrictinfo中。另外由于目标表上没有相关索引，RelOptInfo的indexlist字段为空。
+Pathkey 是表示路径排序顺序的数据结构。本例因为查询包含一条 ORDER BY 子句，且该子句中的列为 data，故 data 会被包装为 pathkey，放入列表变量 `sort_pathkeys` 中。
 
-为了满足排序要求，planner.c中的standard_qp_callback()函数会在PlannerInfo的sor_pathkeys字段中添加一个pathkey。
+4. 创建一个Path结构，并使用 `cost_seqscan` 函数估计顺序扫描的代价，并将代价写入`Path`中。然后使用 `pathnode.c` 中定义的 `add_path()` 函数，将该路径添加至 RelOptInfo 中。
 
-Pathkey是表示路径排序顺序的数据结构。本例因为查询包含一条ORDER BY子句，且该子句中的列为data，故data会被包装为pathkey，放入列表变量sort_pathkeys中。
-
-创建一个Path结构，并使用cost_seqscan函数估计顺序扫描的代价，并将代价写入Path中。然后使用pathnode.c中定义的add_path()函数，将该路径添加至RelOptInfo中。
-
-如之前所提到过的，Path中同时包含启动代价和总代价，都是由cost_seqscan函数所估计的。
+如之前所提到过的，Path 中同时包含启动代价和总代价，都是由 `cost_seqscan` 函数所估计的。
 
 在本例中，因为目标表上没有索引，计划器只估计了顺序扫描的代价，因此最小代价是自动确定的。
 
-图3.11 如何得到例1中代价最小的路径（接图3.10）
+5. 创建一个新的 RelOptInfo 结构，用于处理 ORDER BY 子句。
 
+注意新的 RelOptInfo 没有 baserestrictinfo 字段，该信息已经被WHERE子句所持有。
 
-
-创建一个新的RelOptInfo结构，用于处理ORDER BY子句。
-
-注意新的RelOptInfo没有baserestrictinfo字段，该信息已经被WHERE子句所持有。
-
-创建一个排序路径，并添加到新的RelOptInfo中；然后让SortPath的subpath字段指向顺序扫描的路径。
-
+6. 创建一个排序路径，并添加到新的 RelOptInfo 中；然后让 SortPath 的 subpath 字段指向顺序扫描的路径。
+```
 typedef struct SortPath
 {
     Path    path;
     Path    *subpath;        /* 代表输入来源的子路径 */
 } SortPath;
-SortPath结构包含两个Path结构：path与subpath；path中存储了排序算子本身的相关信息，而subpath则指向之前得到的代价最小的路径。
+```
+SortPath 结构包含两个 Path 结构：path 与 subpath；path 中存储了排序算子本身的相关信息，而 subpath 则指向之前得到的代价最小的路径。
 
-注意顺序扫描路径中parent字段，该字段指向之前的RelOptInfo结构体（也就是在baserestrictinfo中存储着WHERE子句的那个RelOptInfo）。因此在下一步创建计划树的过程中，尽管新的RelOptInfo结构并未包含baserestrictinfo，但计划器可以创建一个包含Filter的顺序扫描节点，将WHERE子句作为过滤条件。
+注意顺序扫描路径中 parent 字段，该字段指向之前的 RelOptInfo 结构体（也就是在 baserestrictinfo 中存储着 WHERE 子句的那个 RelOptInfo）。因此在下一步创建计划树的过程中，尽管新的 RelOptInfo 结构并未包含 baserestrictinfo，但计划器可以创建一个包含 Filter 的顺序扫描节点，将 WHERE 子句作为过滤条件。
 
-这里已经获得了代价最小的访问路径，然后就可以基于此生成一颗计划树。3.3.3节描述了相关的细节。
+这里已经获得了代价最小的访问路径，然后就可以基于此生成一颗计划树。
 
 ## 按照代价最小的路径，创建计划树
 
@@ -335,8 +334,11 @@ SortPath结构包含两个Path结构：path与subpath；path中存储了排序�
 计划树的根节点是定义在 plannodes.h 中的 PlannedStmt 结构，其中有4个代表性字段：
 
 **commandType**存储操作的类型，诸如SELECT，UPDATE和INSERT。
+
 **rtable**存储范围表的列表（RangeTblEntry的列表）。
+
 **relationOids**存储与查询相关表的oid。
+
 **plantree**存储着一颗由计划节点组成的计划树，每个计划节点对应着一种特定操作，诸如顺序扫描，排序和索引扫描。
 
 ```
@@ -371,13 +373,16 @@ typedef struct PlannedStmt
 } PlannedStmt;
 ```
 
- 如上所述，计划树包含各式各样的计划节点。PlanNode是所有计划节点的基类，其他计划节点都会包含PlanNode结构。比如顺序扫描节点SeqScanNode，包含一个PlanNode和一个整型变量scanrelid。PlanNode包含14个字段。下面是7个代表性字段：
+ 如上所述，计划树包含各式各样的计划节点。
+ 
+ PlanNode 是所有计划节点的基类，其他计划节点都会包含 PlanNode 结构。比如顺序扫描节点 SeqScanNode，包含一个 PlanNode 和一个整型变量 scanrelid。PlanNode 包含14个字段。下面是7个代表性字段：
 
-startup_cost和total_cost是该节点对应操作的预估代价。
-rows是计划器预计扫描的行数。
-targetlist保存了该查询树中目标项的列表。
-qual储存了限定条件的列表。
-lefttree和righttree用于添加子节点。
+`startup_cost`和`total_cost`是该节点对应操作的预估代价。
+`rows`是计划器预计扫描的行数。
+`targetlist`保存了该查询树中目标项的列表。
+`qual`储存了限定条件的列表。
+`lefttree`和`righttree`用于添加子节点。
+
 ```
 /* ----------------
  * 计划节点(Plan Node)
@@ -436,15 +441,15 @@ typedef struct Scan
  * ---------------- */
 typedef Scan SeqScan;
 ```
-下面是两颗计划树，分别与前一小节中的两个例子对应。
 
-3.3.3.1 例1
-第一个例子是3.3.2.1节例1对应的计划树。图3.11所示的代价最小的路径，是由一个排序路径和一个顺序扫描路径组合而成。根路径是排序路径，而其子路径为顺序扫描路径。尽管这里忽略了大量细节，但是从代价最小的路径中生成计划树的过程是显而易见的。在本例中，一个 SortNode被添加到PlannedStmt结构中，而SortNode的左子树上则挂载了一个SeqScanNode，如图3.15(a)所示。
+### 例子
+在本例中，一个 SortNode 被添加到 PlannedStmt 结构中，而 SortNode 的左子树上则挂载了一个 SeqScanNode。
 
-在SortNode中，左子树lefttree指向SeqScanNode。
+在SortNode中，左子树 lefttree 指向 SeqScanNode。
 
-在SeqScanNode中，qual保存了WHERE子句：'id<300'。
+在 SeqScanNode 中，qual 保存了 WHERE 子句：'id<300'。
 
+```
 typedef struct Sort
 {
     Plan        plan;
@@ -454,34 +459,9 @@ typedef struct Sort
     Oid            *collations;        /* collation的OID  */
     bool           *nullsFirst;        /* NULLS FIRST/LAST 方向 */
 } Sort;
-图3.15. 计划树的例子
-
-
-
-3.3.3.2 例2
-第二个例子是3.3.2.2节例2对应的计划树。其代价最小的路径为索引扫描路径，如图3.14所示。因此计划树由单个IndexScanNode独立组成，如图3.15(b)所示。
-
-在本例中，WHERE子句id < 240是一个访问谓词，它储存在IndexScanNode的indexqual字段中。
 ```
-/* 索引扫描节点 */
-typedef struct Scan
-{
-    Plan          plan;
-    Index         scanrelid;         /* relid 是范围表上的索引ID */
-} Scan;
-
-typedef struct IndexScan
-{
-    Scan          scan;
-    Oid           indexid;            /* 待扫描的索引OID */
-    List          *indexqual;         /* 索引限定条件的列表 (通常是OpExprs) */
-    List          *indexqualorig;     /* 同上，但使用原始形式 */
-    List          *indexorderby;      /* 索引的ORDER BY表达式 */
-    List          *indexorderbyorig;  /* 同上，但使用原始形式 */
-    List          *indexorderbyops;   /* ORDER BY表达式用到的排序运算符的OID */
-    ScanDirection indexorderdir;      /* 正序扫描还是逆序扫描，或者根本不在乎 */
-} IndexScan;
-```
+计划树的例子：
+![avatar](./img/fig-3-15.png)
 
 
 [返回 - pg 查询在计划器所做的事 00182](./pg_planner.md) 
