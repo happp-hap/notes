@@ -1,7 +1,10 @@
 
 # 常用 Git 命令清单
 
-
+git config --global user.name '用户名'
+git config --global user.email '邮箱'
+ssh-keygen -t rsa -C '邮箱'
+找到 id_rsa.pub 文件，记事本打开全选复制，上传
 
 专用名词
 
