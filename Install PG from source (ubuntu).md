@@ -55,6 +55,10 @@ make(GNU make版本3.80或以上)，make install:
     waiting for server to start.... done
 
     server started
+    
+    
+### 关闭数据库
+    pg_ctl -D /usr/local/pgsql/data/ -l pg.logfile stop
 
 ## 监控服务器日志
     
@@ -108,5 +112,64 @@ testdb=# select * from company;
 	   4280 pts/0    S+     0:00 grep --color=auto postgres
 	
 
+## 用 pg_restore 恢复数据库
+
+    
+    
+    pg_restore -d imdb -U imdb --clean --if-exists -v /home/hap/Desktop/imdb_pg11 
+    
+    psql -U imdb
+    
+    select count(*) from title;
+### pg_dump和pg_restore对PostgreSql进行备份和还原
+    https://blog.csdn.net/weixin_48277414/article/details/125199305
+
+## showtables so on
+    （来自下方链接）
+    
+    postgresql的show databases、show tables、describe table操作
 
 
+    1、相当与mysql的show databases;
+    select datname from pg_database;
+
+
+    2、相当于mysql的show tables;
+    SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+    public 是默认的schema的名字
+
+
+    3、相当与mysql的describe table_name;
+    SELECT column_name FROM information_schema.columns WHERE table_name ='table_name';
+    'table_name'是要查询的表的名字
+
+    site：https://zhuanlan.zhihu.com/p/50550454
+
+## ubuntu安装软件时:有未能满足的依赖关系
+
+使用aptitude
+
+aptitude与 apt-get 一样，是 Debian 及其衍生系统中功能极其强大的包管理工具。与 apt-get 不同的是，aptitude在处理依赖问题上更佳一些。举例来说，aptitude在删除一个包时，会同时删除本身所依赖的包。这样，系统中不会残留无用的包，整个系统更为干净。
+
+sudo aptitude install libprotobuf-dev
+
+运行后，不接受未安装方案，接受降级方案。搞定。
+
+SITE:
+https://blog.51cto.com/u_12630471/3702931
+
+deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
+
+
+deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse 
+
+
+## 
