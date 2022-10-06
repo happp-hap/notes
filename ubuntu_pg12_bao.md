@@ -64,6 +64,8 @@ like this:
 
     echo "shared_preload_libraries = 'pg_bao'" >> /media/data/pg_data/data/postgresql.conf
 
+the path of pg_bao.so can not be found, so :
+    sudo cp /usr/lib/postgresql/12/lib/pg_bao.so /usr/local/pgsql/lib/
 
 restart postgreSQL.
 
