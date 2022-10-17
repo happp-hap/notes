@@ -14,7 +14,7 @@
    sudo apt upgrade
    
 ## pg12
-
+```
    sudo apt install make gcc curl wget emacs postgresql-server-dev-12
 
    sudo apt install postgresql-12 # postgresql-common in this
@@ -37,7 +37,7 @@
 
    createuser imdb -d -s
    createdb imdb
-
+```
 ### change passwd
 
     sudo -u postgres psql
@@ -102,7 +102,7 @@ cd '/usr/lib/postgresql/12/lib/bitcode' && /usr/lib/llvm-10/bin/llvm-lto -thinlt
 
 
 ## bao_server
-
+```
    sudo apt install python3 python3-pip
 
    pip install psycopg2
@@ -118,7 +118,7 @@ cd '/usr/lib/postgresql/12/lib/bitcode' && /usr/lib/llvm-10/bin/llvm-lto -thinlt
    SET enable_bao TO on;
    EXPLAIN SELECT count(*) FROM title;
    SELECT count(*) FROM title;
-
+```
 ## test & show tests
    
    python3 run_queries.py sample_queries/*.sql | tee ~/bao_run.txt
@@ -131,3 +131,5 @@ cd '/usr/lib/postgresql/12/lib/bitcode' && /usr/lib/llvm-10/bin/llvm-lto -thinlt
    pip install matplotlib pandas
 
    run analyze_bao.ipynb
+
+   
