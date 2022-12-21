@@ -40,12 +40,13 @@
 ```
 
 ## PG的启动和停止
+```
 sudo service postgresql status 用于检查数据库的状态。
 ps -ef | grep postgresql 用于显示postgresql进程状态。
 sudo service postgresql start 用于开始运行数据库。
 sudo service postgresql stop 用于停止运行数据库。
 sudo service postgresql restart 用于重启运行数据库。
-
+```
 
 ### change passwd
 
