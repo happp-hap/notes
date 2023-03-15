@@ -64,7 +64,7 @@ sudo service postgresql restart 用于重启运行数据库。
 local   all             all					md5
 
 ```
-
+```
 如果您在本地主机上连接到PostgreSQL，则可以尝试将身份验证方法更改为“trust”或“md5”。要更改pg_hba.conf文件中的身份验证方法，请使用以下命令：
 
 javascript
@@ -82,7 +82,7 @@ host    all             all             ::1/128                 trust
 Copy code
 sudo service postgresql restart
 这将允许在不需要密码的情况下连接到PostgreSQL服务器。
-
+```
 restart pg
 
 ### login imdb without passwd
