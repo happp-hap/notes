@@ -104,11 +104,14 @@ restart pg
 data okay
 
 ## bao 
+```
    sudo apt install aptitude
    sudo aptitude install postgresql-server-dev-12
    !!! do not accept first schema, then downgrade libc6
    
    sudo make USE_PGXS=1 install
+```
+
 ```
 /bin/mkdir -p '/usr/lib/postgresql/12/lib'
 /bin/mkdir -p '/usr/share/postgresql/12/extension'
@@ -148,7 +151,7 @@ cd '/usr/lib/postgresql/12/lib/bitcode' && /usr/lib/llvm-10/bin/llvm-lto -thinlt
    SELECT count(*) FROM title;
 ```
 ## test & show tests
-   
+```
    python3 run_queries.py sample_queries/*.sql | tee ~/bao_run.txt
    
    run_queries.py 
@@ -159,5 +162,5 @@ cd '/usr/lib/postgresql/12/lib/bitcode' && /usr/lib/llvm-10/bin/llvm-lto -thinlt
    pip install matplotlib pandas
 
    run analyze_bao.ipynb
-
+```
    
