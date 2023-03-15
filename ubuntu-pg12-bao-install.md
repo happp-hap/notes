@@ -65,6 +65,24 @@ local   all             all					md5
 
 ```
 
+如果您在本地主机上连接到PostgreSQL，则可以尝试将身份验证方法更改为“trust”或“md5”。要更改pg_hba.conf文件中的身份验证方法，请使用以下命令：
+
+javascript
+Copy code
+sudo nano /etc/postgresql/<version>/main/pg_hba.conf
+在文件中找到包含“local”和“peer”（或“md5”）的行，并将其更改为：
+
+sql
+Copy code
+local   all             all                                     trust
+host    all             all             127.0.0.1/32            trust
+host    all             all             ::1/128                 trust
+保存文件并重新启动PostgreSQL服务器：
+
+Copy code
+sudo service postgresql restart
+这将允许在不需要密码的情况下连接到PostgreSQL服务器。
+
 restart pg
 
 ### login imdb without passwd
