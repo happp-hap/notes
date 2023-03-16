@@ -156,7 +156,7 @@ cd '/usr/lib/postgresql/12/lib/bitcode' && /usr/lib/llvm-6.0/bin/llvm-lto -thinl
    sudo apt install python3 python3-pip
 
    pip install psycopg2
-   pip3 install scikit-learn numpy joblib
+   pip3 install scikit-learn numpy joblib -i https://pypi.tuna.tsinghua.edu.cn/simple
    pip3 install torch==1.5.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
    python3 main.py 1>>bao_server.log 2>&1 &
