@@ -22,7 +22,7 @@
    # 更新软件包列表
    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 
-
+   # 这里千万别用 postgresql-server-dev-all ，因为不适配后面的版本，会直接make不过
    sudo apt install make gcc curl wget emacs postgresql-server-dev-12
 
    sudo apt install postgresql-12 # postgresql-common in this
