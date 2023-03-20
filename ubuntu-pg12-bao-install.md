@@ -15,6 +15,14 @@
    
 ## pg12
 ```
+
+   # 添加 Postgresql 源到系统源
+   # 添加签名密钥
+   sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+   # 更新软件包列表
+   wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+
    sudo apt install make gcc curl wget emacs postgresql-server-dev-12
 
    sudo apt install postgresql-12 # postgresql-common in this
