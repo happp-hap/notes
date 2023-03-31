@@ -117,13 +117,13 @@ sudo service postgresql restart
     select count(*) from title;
 
    看看大小：
-   
+```
    imdb=# SELECT pg_size_pretty(pg_database_size('imdb'));
     pg_size_pretty 
    ----------------
     11 GB
    (1 行记录)
-
+```
 data okay
 
 ## bao安装 - 下面前三句就是说如果用了高版本的ubuntu，会产生麻烦的依赖问题，这是一种解决方案
