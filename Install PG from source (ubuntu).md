@@ -8,6 +8,8 @@
 ## 安装gcc
 
 sudo apt-get install gcc
+sudo apt-get install zlib1g-dev
+
 
 ## 安装基础库
 
